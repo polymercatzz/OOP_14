@@ -2,6 +2,8 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyText implements ActionListener{
     private JFrame jf;
@@ -49,10 +51,25 @@ public class MyText implements ActionListener{
             JFileChooser fc = new JFileChooser();
             fc.showOpenDialog(jf);
             File f = fc.getSelectedFile();
+            System.out.println(f.getName());
+            try (FileInputStream fn = new  FileInputStream(f.getName());
+             ObjectInputStream outt = new ObjectInputStream(fn);){
+                area.setText((String) outt.readObject());
+            }catch (IOException i){
+                i.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+            }
         } else if (e.getActionCommand().equals("Save")){
             JFileChooser fc = new JFileChooser();
             fc.showSaveDialog(jf);
             File f = fc.getSelectedFile();
+            System.out.println(f.getName());
+            try (FileOutputStream fn = new  FileOutputStream(f.getName());
+             ObjectOutputStream outt = new ObjectOutputStream(fn);){
+                outt.writeObject(area.getText());
+            }catch (IOException i){
+                i.printStackTrace();
+            }
         } else if (e.getActionCommand().equals("Close")){
             jf.dispose();
         }
